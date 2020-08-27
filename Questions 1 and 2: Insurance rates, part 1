@@ -1,0 +1,114 @@
+Use the information below as you answer this 6-part question.
+
+An insurance company offers a one-year term life insurance policy that pays $150,000 in the event of death within one year. 
+The premium (annual cost) for this policy for a 50 year old female is $1,150. Suppose that in the event of a claim, the company forfeits the premium and 
+loses a total of $150,000, and if there is no claim the company gains the premium amount of $1,150. 
+The company plans to sell 1,000 policies to this demographic.
+
+Question 1a
+
+The death_prob data frame from the dslabs package contains information about the estimated probability of death within 1 year (prob) for different ages and sexes.
+
+Use death_prob to determine the death probability of a 50 year old female, p.
+
+Answer code:
+
+p <- death_prob %>% filter(sex == "Female", age == 50)
+p
+
+Question 1b
+
+The loss in the event of the policy holder's death is -$150,000 and the gain if the policy holder remains alive is the premium $1,150.
+
+What is the expected value of the company's net profit on one policy for a 50 year old female?
+
+Answer code: 
+
+dead <- 0.003193
+alive <- 1-dead
+
+e <- (-150000*dead) + (alive*1150)
+e
+
+Question 1c
+
+Calculate the standard error of the profit on one policy for a 50 year old female.
+
+Answer code:
+
+abs(-150000-1150)*sqrt(dead*alive)
+
+Question 1d
+
+What is the expected value of the company's profit over all 1,000 policies for 50 year old females?
+
+
+Answer code:
+
+n <- 1000
+e <- (-150000*dead) + (alive*1150)
+e * n
+
+Question 1e
+
+What is the standard error of the sum of the expected value over all 1,000 policies for 50 year old females?
+
+Answer code: 
+
+sqrt(n)*(abs(-150000-1150)*sqrt(dead*alive))
+
+Question 1f
+
+Use the Central Limit Theorem to calculate the probability that the insurance company loses money on this set of 1,000 policies.
+
+Answer code:
+
+n <- 1000
+avg <- n * (-150000*dead + 1150*alive)
+se <- sqrt(n) * (1150 - -150000)*sqrt(dead*alive)
+pnorm(0, avg, se)
+
+Question 2a
+
+Use death_prob to determine the probability of death within one year for a 50 year old male.
+
+Answer code:
+
+p <- death_prob %>% filter(sex == "Male", age == 50)
+
+Question 2b
+
+Suppose the company wants its expected profits from 1,000 50 year old males with $150,000 life insurance policies to be $700,000. 
+Use the formula for expected value of the sum of draws with the following values and solve for the premium  𝑏 :
+
+E[𝑆]=𝜇𝑆=700000 
+𝑛=1000 
+𝑝=death probability of age 50 male 
+𝑎=150000 
+𝑏=premium 
+What premium should be charged?
+
+Answer code:
+
+E <- 700000
+n <- 1000
+a <- -150000
+p <- 0.005013
+b <- (E/n - (a*p))/(1-p)
+b
+
+Question 2c
+
+Using the new 50 year old male premium rate, calculate the standard error of the sum of 1,000 premiums.
+
+Answer code:
+SE <- sqrt(n)*(abs(a-b)*sqrt(p*(1-p)))
+
+Question 2d
+
+What is the probability of losing money on a series of 1,000 policies to 50 year old males?
+Use the Central Limit Theorem.
+
+avg <- n * ((a*p) + b*(1-p))
+se <- sqrt(n) * (b-a)*sqrt(p*(1-p))
+pnorm(0, avg, se)
